@@ -1,14 +1,17 @@
+// Question.js
 import React from "react";
 
 const Question = ({ data, onAnswer }) => {
   return (
     <div>
       <h2>{data.question}</h2>
-      {data.answers.map((answer) => (
-        <button key={answer} onClick={() => onAnswer(answer)}>
-          {answer}
-        </button>
-      ))}
+      <ul>
+        {data.answers.map((answer, index) => (
+          <li key={index} onClick={() => onAnswer(answer)}>
+            {answer}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };

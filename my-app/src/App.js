@@ -2,16 +2,7 @@ import React, { useState } from "react";
 import Question from "./Question";
 import Score from "./Score";
 import Result from "./Result";
-
-const questions = [
-  {
-    question:
-      "What programming language is primarily used for web development?",
-    answers: ["Python", "JavaScript", "Java", "C#"],
-    correct: "JavaScript",
-  },
-  // add more questions similarly
-];
+import questions from "./questions"; // Import questions
 
 function App() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -36,7 +27,13 @@ function App() {
       ) : (
         <>
           <Score score={score} />
-          <Question data={questions[currentQuestion]} onAnswer={handleAnswer} />
+          {/* Ensure currentQuestion is valid before rendering */}
+          {questions[currentQuestion] && (
+            <Question
+              data={questions[currentQuestion]}
+              onAnswer={handleAnswer}
+            />
+          )}
         </>
       )}
     </div>
