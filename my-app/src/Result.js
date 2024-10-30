@@ -1,4 +1,5 @@
 import React from "react";
+import "./styles.css"; // Import the CSS styles
 
 const Result = ({ score }) => {
   return (

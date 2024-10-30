@@ -3,6 +3,7 @@ import Question from "./Question";
 import Score from "./Score";
 import Result from "./Result";
 import questions from "./questions"; // Import questions
+import "./styles.css"; // Import the CSS styles
 
 function App() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -21,7 +22,7 @@ function App() {
   };
 
   return (
-    <div>
+    <div className="app-container">
       {showResult ? (
         <Result score={score} />
       ) : (
