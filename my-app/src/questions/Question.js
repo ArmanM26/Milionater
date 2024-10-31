@@ -1,7 +1,6 @@
 // Question.js
 import React from "react";
-import "./styles.css"; // Import the CSS styles
-
+import "./../styles.css";
 const Question = ({ data, onAnswer }) => {
   return (
     <div>
