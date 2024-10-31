@@ -1,6 +1,10 @@
 // Register.js
 import React, { useState } from "react";
-import "./styles.css"; // Make sure to import the CSS
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { notification } from "antd"; // For displaying notifications
+import { auth, db } from "../../../services/firebase"; // Adjust the path as necessary
+import { setDoc, doc } from "firebase/firestore"; // For Firestore database
+import "./styles.css"; // Ensure you import your CSS
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +14,7 @@ const Register = () => {
   });
   const [formErrors, setFormErrors] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false); // For loading state
 
   // Handle input changes
   const handleChange = (e) => {
@@ -35,15 +40,44 @@ const Register = () => {
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const errors = validate();
     setFormErrors(errors);
 
     if (Object.keys(errors).length === 0) {
-      setIsSubmitted(true);
-      console.log("User Registered", formData);
-      // Here you would add logic to save the formData to a database or API
+      setLoading(true); // Set loading state to true
+      try {
+        // Create user with Firebase
+        const response = await createUserWithEmailAndPassword(
+          auth,
+          formData.email,
+          formData.password
+        );
+        const { uid } = response.user;
+
+        // Create a document in Firestore
+        const userDoc = doc(db, "users", uid); // Adjust Firestore path as necessary
+        await setDoc(userDoc, {
+          uid,
+          name: formData.name,
+          email: formData.email,
+        });
+
+        // Reset form and show success message
+        setFormData({ name: "", email: "", password: "" });
+        setIsSubmitted(true);
+        notification.success({ message: "Registration successful!" });
+      } catch (error) {
+        // Handle registration errors
+        notification.error({
+          message: "Registration Failed",
+          description:
+            error.message || "An error occurred during registration.",
+        });
+      } finally {
+        setLoading(false); // Reset loading state
+      }
     }
   };
 
@@ -90,7 +124,9 @@ const Register = () => {
               <span className="error">{formErrors.password}</span>
             )}
           </div>
-          <button type="submit">Register</button>
+          <button type="submit" disabled={loading}>
+            {loading ? "Registering..." : "Register"}
+          </button>
         </form>
       )}
     </div>
