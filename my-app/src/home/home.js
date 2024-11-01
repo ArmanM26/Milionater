@@ -6,69 +6,88 @@ import Score from "../score/Score";
 import "./home.css";
 
 const Home = () => {
-  const [currentQuestion, setCurrentQuestion] = useState(0); // State to track the current question index
-  const [showResult, setShowResult] = useState(false); // State to determine if the result should be shown
-  const [score, setScore] = useState(0); // State to track the user's score
-  const [currentPrize, setCurrentPrize] = useState(0); // State to track current prize amount
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [showResult, setShowResult] = useState(false);
+  const [score, setScore] = useState(0);
+  const [currentPrize, setCurrentPrize] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState(null); // State to track selected answer index
+  const [isCorrect, setIsCorrect] = useState(null); // State to track if the selected answer is correct
 
-  // Function to handle answer selection
-  const handleAnswer = (answer) => {
+  const handleAnswer = (answer, index) => {
+    setSelectedAnswer(index); // Set the selected answer index
+
     if (answer === questions[currentQuestion].correct) {
-      setScore(score + 1); // Increment score if the answer is correct
+      setIsCorrect(true); // Mark as correct
+      setScore(score + 1);
 
-      // Add the prize for the next question (if exists)
       if (currentQuestion < questions.length - 1) {
         setCurrentPrize(currentPrize + money[currentQuestion + 1]);
       } else {
-        setCurrentPrize(currentPrize + money[currentQuestion]); // If it's the last question, add its prize
+        setCurrentPrize(currentPrize + money[currentQuestion]);
       }
 
-      // Move to the next question or show the result if it's the last question
-      if (currentQuestion < questions.length - 1) {
-        setCurrentQuestion(currentQuestion + 1); // Move to the next question
-      } else {
-        setShowResult(true); // Show result if there are no more questions
-      }
+      setTimeout(() => {
+        setSelectedAnswer(null);
+        setIsCorrect(null);
+        if (currentQuestion < questions.length - 1) {
+          setCurrentQuestion(currentQuestion + 1);
+        } else {
+          setShowResult(true);
+        }
+      }, 1000); // Move to the next question after a delay
     } else {
-      // If the answer is incorrect, restart the game
-      onRestart();
+      setIsCorrect(false); // Mark as incorrect
+
+      setTimeout(() => {
+        onRestart(); // Restart the game if answer is wrong
+      }, 1000); // Delay to show correct and incorrect colors before restart
     }
   };
 
-  // Function to restart the quiz
   const onRestart = () => {
-    setCurrentQuestion(0); // Reset to the first question
-    setScore(0); // Reset score
-    setCurrentPrize(0); // Reset current prize
-    setShowResult(false); // Hide result
+    setCurrentQuestion(0);
+    setScore(0);
+    setCurrentPrize(0);
+    setShowResult(false);
+    setSelectedAnswer(null);
+    setIsCorrect(null);
   };
 
   return (
     <>
       {!showResult ? (
         <div className="question-container">
-          <h2>{questions[currentQuestion].question}</h2>{" "}
-          {/* Displaying the question */}
+          <h2>{questions[currentQuestion].question}</h2>
           <div className="answers">
             {questions[currentQuestion].answers.map((answer, index) => (
-              <button key={index} onClick={() => handleAnswer(answer)}>
-                {String.fromCharCode(65 + index)}: {answer}{" "}
-                {/* Displaying each answer as buttons */}
+              <button
+                key={index}
+                onClick={() => handleAnswer(answer, index)}
+                className={
+                  selectedAnswer === index
+                    ? isCorrect
+                      ? "correct"
+                      : "incorrect"
+                    : selectedAnswer !== null &&
+                      answer === questions[currentQuestion].correct
+                    ? "correct"
+                    : ""
+                }
+              >
+                {String.fromCharCode(65 + index)}: {answer}
               </button>
             ))}
           </div>
-          <div className="score">Score: {score}</div>{" "}
-          {/* Displaying the current score */}
+          <div className="score">Score: {score}</div>
           <div className="prize">Current Prize: ${currentPrize}</div>
         </div>
       ) : (
         <div className="result">
-          <Score score={score} onRestart={onRestart} />{" "}
-          {/* Displaying the Score component */}
+          <Score score={score} onRestart={onRestart} />
         </div>
       )}
     </>
   );
 };
 
-export default Home; // Exporting the Home component
+export default Home;

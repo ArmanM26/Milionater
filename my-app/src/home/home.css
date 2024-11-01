@@ -6,7 +6,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #001d3c;
+    background-color: #1569c2e8;
     color: #ffffff;
     margin: 0;
   }
@@ -15,7 +15,7 @@ body {
     background: linear-gradient(145deg, #0056b3, #1e4594);
     padding: 2rem;
     border-radius: 20px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
+    box-shadow: 0px 4px 10px rgba(30, 2, 106, 0.4);
     width: 90%;
     max-width: 600px;
     text-align: center;
@@ -33,7 +33,7 @@ body {
     gap: 1rem;
   }
   
-  button {
+  /* button {
     background: linear-gradient(145deg, #00d0ff, #000000);
     color: #ffffff;
     padding: 1rem;
@@ -53,7 +53,7 @@ body {
   button:active {
     background: #2a2a2a;
     box-shadow: inset 0px 4px 10px rgba(0, 0, 0, 0.8);
-  }
+  } */
   
   .score,
   .prize {
@@ -67,7 +67,7 @@ body {
     font-size: 1.5rem;
     color: #e0e0e0;
   }
-  
+/*   
   .result button {
     margin-top: 2rem;
     background: linear-gradient(145deg, #3a3a3a, #4a4a4a);
@@ -81,5 +81,26 @@ body {
   .result button:active {
     background: #2a2a2a;
     box-shadow: inset 0px 4px 10px rgba(0, 0, 0, 0.8);
+  } */
+  
+  
+button.correct {
+    background-color: #2ddf0d; /* Зеленый цвет для правильного ответа */
+    color: #ffffff;
   }
   
+  button.incorrect {
+    background-color: #f44336; /* Красный цвет для неправильного ответа */
+    color: #ffffff;
+  }
+  
+  button:hover:not(.correct):not(.incorrect) {
+    background: linear-gradient(145deg, #0b025b, #6a6a6a);
+    box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.5);
+  }
+  
+  button:active {
+    background: #05165b;
+    box-shadow: inset 0px 4px 10px rgba(0, 0, 0, 0.8);
+  }
+
