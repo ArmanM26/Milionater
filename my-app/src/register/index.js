@@ -1,10 +1,10 @@
 // Register.js
 import React, { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { notification } from "antd"; // For displaying notifications
-import { auth, db } from "../../../services/firebase"; // Adjust the path as necessary
-import { setDoc, doc } from "firebase/firestore"; // For Firestore database
-import "./styles.css"; // Ensure you import your CSS
+import { notification } from "antd"; // For notifications
+import { auth, db } from "../firebase"; // Firebase auth and Firestore
+import { setDoc, doc } from "firebase/firestore"; // Firestore database
+import "./styles.css"; // Your CSS file
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -14,7 +14,7 @@ const Register = () => {
   });
   const [formErrors, setFormErrors] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false); // For loading state
+  const [loading, setLoading] = useState(false);
 
   // Handle input changes
   const handleChange = (e) => {
@@ -46,9 +46,8 @@ const Register = () => {
     setFormErrors(errors);
 
     if (Object.keys(errors).length === 0) {
-      setLoading(true); // Set loading state to true
+      setLoading(true);
       try {
-        // Create user with Firebase
         const response = await createUserWithEmailAndPassword(
           auth,
           formData.email,
@@ -56,27 +55,26 @@ const Register = () => {
         );
         const { uid } = response.user;
 
-        // Create a document in Firestore
-        const userDoc = doc(db, "users", uid); // Adjust Firestore path as necessary
+        // Store user data in Firestore
+        const userDoc = doc(db, "users", uid);
         await setDoc(userDoc, {
           uid,
           name: formData.name,
           email: formData.email,
         });
 
-        // Reset form and show success message
+        // Reset form and notify user
         setFormData({ name: "", email: "", password: "" });
         setIsSubmitted(true);
         notification.success({ message: "Registration successful!" });
       } catch (error) {
-        // Handle registration errors
         notification.error({
           message: "Registration Failed",
           description:
             error.message || "An error occurred during registration.",
         });
       } finally {
-        setLoading(false); // Reset loading state
+        setLoading(false);
       }
     }
   };
