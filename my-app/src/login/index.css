@@ -9,6 +9,7 @@
     height: 100vh;                 /* Full viewport height */
     background-color: #f4f4f4;     /* Light background color */
     font-family: Arial, sans-serif; /* Font for the text */
+    width: 500px;
   }
   
   /* Heading styles */
