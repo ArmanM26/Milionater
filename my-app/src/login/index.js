@@ -1,71 +1,70 @@
 // Login.js
-import { useState } from "react"; // Importing useState for state management
-import { Form, Input, Button } from "antd"; // Importing Ant Design components for form handling
-import { signInWithEmailAndPassword } from "firebase/auth"; // Importing Firebase function for signing in
-import { auth } from "../firebase"; // Importing Firebase authentication instance
-import { Link, useNavigate } from "react-router-dom"; // Importing React Router components
-// import AuthWrapper from "../../../Components/shared/AuthWrapper"; // Uncomment if using AuthWrapper
-import "./index.css"; // Importing CSS styles
-// import loginBanner from "../../../core/images/auth_login.jpg"; // Uncomment if using a login banner image
+import { useState } from "react";
+import { Form, Input, Button } from "antd";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase";
+import { Link, useNavigate } from "react-router-dom";
+import "./index.css"; // Import the CSS styles
 
 const Login = () => {
-  const [loading, setLoading] = useState(false); // State to manage loading status
-  const [form] = Form.useForm(); // Creating a form instance using Ant Design
-  const navigate = useNavigate(); // Hook for programmatic navigation
+  const [loading, setLoading] = useState(false);
+  const [form] = Form.useForm();
+  const navigate = useNavigate();
 
   const handleLogin = async (values) => {
-    setLoading(true); // Set loading to true while the login is in progress
+    setLoading(true);
     try {
-      const { email, password } = values; // Destructure email and password from form values
-      await signInWithEmailAndPassword(auth, email, password); // Firebase login
-      // Redirect to home page after successful login
-      navigate("/home"); // Update path as per your routing setup
+      const { email, password } = values;
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate("/home");
     } catch (error) {
-      console.error("Login error:", error); // Log error for debugging
-      // Here you can add user notifications for login errors
+      console.error("Login error:", error);
     } finally {
-      setLoading(false); // Reset loading state after login attempt
+      setLoading(false);
     }
   };
 
   return (
-    // <AuthWrapper title="Sign in" banner={loginBanner}> // Uncomment if using AuthWrapper
-    <Form layout="vertical" form={form} onFinish={handleLogin}>
-      <Form.Item
-        label="Email" // Label for the email input
-        name="email" // Name for the form field
-        rules={[
-          {
-            required: true, // Validation rule for required field
-            message: "Please input your email", // Error message if validation fails
-          },
-        ]}
+    <div className="login-container">
+      {" "}
+      {/* Apply the class here */}
+      <h2>Sign In</h2> {/* Heading for the form */}
+      <Form
+        layout="vertical"
+        form={form}
+        onFinish={handleLogin}
+        className="form-group"
       >
-        <Input type="email" placeholder="Email" /> // Email input field
-      </Form.Item>
-      <Form.Item
-        label="Password" // Label for the password input
-        name="password" // Name for the form field
-        rules={[
-          {
-            required: true, // Validation rule for required field
-            message: "Please input your password", // Error message if validation fails
-          },
-          {
-            pattern: /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/, // Password pattern
-            message:
-              "Password must be 6-16 characters and include a number and a special character.", // Error message for invalid password
-          },
-        ]}
-      >
-        <Input.Password placeholder="Password" /> // Password input field
-      </Form.Item>
-      <Button type="primary" htmlType="submit" loading={loading}>
-        Sign in // Submit button with loading state
-      </Button>
-      <Link to="/register">Sign up</Link> // Link to the registration page
-    </Form>
-    // </AuthWrapper> // Uncomment if using AuthWrapper
+        <Form.Item
+          label="Email"
+          name="email"
+          rules={[{ required: true, message: "Please input your email" }]}
+        >
+          <Input type="email" placeholder="Email" />
+        </Form.Item>
+        <Form.Item
+          label="Password"
+          name="password"
+          rules={[
+            { required: true, message: "Please input your password" },
+            {
+              pattern: /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/,
+              message:
+                "Password must be 6-16 characters and include a number and a special character.",
+            },
+          ]}
+        >
+          <Input.Password placeholder="Password" />
+        </Form.Item>
+        <Button type="primary" htmlType="submit" loading={loading}>
+          Sign in
+        </Button>
+        <Link to="/register" className="link">
+          Sign up
+        </Link>{" "}
+        {/* Link to registration */}
+      </Form>
+    </div>
   );
 };
 
