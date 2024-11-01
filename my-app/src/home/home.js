@@ -9,17 +9,29 @@ const Home = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0); // State to track the current question index
   const [showResult, setShowResult] = useState(false); // State to determine if the result should be shown
   const [score, setScore] = useState(0); // State to track the user's score
+  const [currentPrize, setCurrentPrize] = useState(0); // State to track current prize amount
 
   // Function to handle answer selection
   const handleAnswer = (answer) => {
     if (answer === questions[currentQuestion].correct) {
       setScore(score + 1); // Increment score if the answer is correct
-    }
-    // Move to the next question or show the result if it's the last question
-    if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1); // Move to the next question
+
+      // Add the prize for the next question (if exists)
+      if (currentQuestion < questions.length - 1) {
+        setCurrentPrize(currentPrize + money[currentQuestion + 1]);
+      } else {
+        setCurrentPrize(currentPrize + money[currentQuestion]); // If it's the last question, add its prize
+      }
+
+      // Move to the next question or show the result if it's the last question
+      if (currentQuestion < questions.length - 1) {
+        setCurrentQuestion(currentQuestion + 1); // Move to the next question
+      } else {
+        setShowResult(true); // Show result if there are no more questions
+      }
     } else {
-      setShowResult(true); // Show result if there are no more questions
+      // If the answer is incorrect, restart the game
+      onRestart();
     }
   };
 
@@ -27,6 +39,7 @@ const Home = () => {
   const onRestart = () => {
     setCurrentQuestion(0); // Reset to the first question
     setScore(0); // Reset score
+    setCurrentPrize(0); // Reset current prize
     setShowResult(false); // Hide result
   };
 
@@ -45,10 +58,7 @@ const Home = () => {
           </div>
           <div className="score">Score: {score}</div>{" "}
           {/* Displaying the current score */}
-          <div className="prize">
-            Current Prize: ${money[currentQuestion]}{" "}
-            {/* Displaying current prize amount */}
-          </div>
+          <div className="prize">Current Prize: ${currentPrize}</div>
         </div>
       ) : (
         <div className="result">
