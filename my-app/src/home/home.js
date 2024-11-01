@@ -52,7 +52,8 @@ const Home = () => {
           <div className="answers">
             {questions[currentQuestion].answers.map((answer, index) => (
               <button key={index} onClick={() => handleAnswer(answer)}>
-                {answer} {/* Displaying each answer as buttons */}
+                {String.fromCharCode(65 + index)}: {answer}{" "}
+                {/* Displaying each answer as buttons */}
               </button>
             ))}
           </div>
